@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MyRecipes-Recipe</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://kit.fontawesome.com/7e35cfb087.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+      <a class="navbar-brand navbar-custom" style="font-weight: bold; font-size: 30px" href="{{ url_for('home') }}">MyRecipes</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav navbar-custom ml-auto">
+          <li class="nav-item navbar-custom active">
+            <a class="nav-link navbar-custom" href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home <span class="sr-only">(current)</span></a>
+          </li>
+          
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('contact') }}">Contact</a>
+          </li>
+          {% if current_user.is_authenticated %}
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('account') }}">Account</a>
+          </li>
+          {% if current_user.account_type == 'Contributor' %}
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i> {{ current_user.username }}</a>
+          </li>
+          {% endif %}
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('logout') }}">Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('login') }}">Login</a>
+          </li>
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('signup') }}">Sign Up</a>
+          </li>
+          {% endif %}
+        </ul>
+
+      </div>
+    </nav>
+    {% if current_user.is_authenticated %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="nfbutton" href="{{ url_for('newsfeed') }}">Newsfeed</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon">   
+      </span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <form method="POST">
+           <input type="text" autofocus="autofocus" placeholder="Recipe name" name="search_string">
+           <input type="text" autofocus="autofocus" placeholder="Ingredients" name="search_string2">
+           <input type="text" autofocus="autofocus" placeholder="Cooking time" name="search_string3">
+           <input type="text" autofocus="autofocus" placeholder="Method" name="search_string4">
+           <input type="text" autofocus="autofocus" placeholder="Meal type" name="search_string5">
+          
+           <input type="submit" formaction="/search" value="Search">
+          
+          
+          </form>
+          
+          
+        </li>
+      </ul>
+    </div>    
+    </nav>
+    {% endif %}
+
+    <div class="row py-5 px-5">
+      <div class="col-md-11 mx-auto">
+          <div class="rounded overflow-hidden" style="background-color:rgb(0, 0, 0)" >
+            <h2 class="recipe-name">{{ recipe.recipe_name }}</h2>
+            
+            <div class="tried" style="margin-top: 10px;">
+              {% if current_user.already_tried_recipe(recipe) %}
+              <h4 style="background-color:rgb(72, 179, 40) ; text-align:center">You have tried this recipe</h4>
+              {% else %} 
+              <a class="tried-button btn-md mt-1 mb-1" href="{{ url_for('tried_action', recipe_id=recipe.id, action='tried') }}">Tried</a>
+              {% endif %}
+            </div>
+        
+        <img width="500" height="500" src="{{ image_file }}" style="border: 2px solid; margin: 20px;">
+
+      
+      {% if recipe.author == current_user %}
+      <div class="update-delete-btn">
+        <a class="btn btn-secondary btn-md mt-1 mb-1" href="{{ url_for('update_recipe', recipe_id=recipe.id) }}">Update</a>
+        <button type="button" class="btn btn-danger btn-md m-1" data-toggle="modal" data-target="#deleteModal" >Delete</button>
+      </div>
+      {% endif %}
+      <!-- <div class="content" style="margin-top: 50px;">
+        <h3>Instructions</h3>
+        <p class="article-content">{{ recipe.content }}</p>
+      </div> -->
+      <div class="recipe-content" style="margin-top: 50px; ; margin: 20px;">
+        <p class="article-content"> <label><i><b> By: </b></i>{{ recipe.author.username }}</label> </p>
+        <p class="article-content"> <label><i><b> Ingredients: </b></i>{{ recipe.recipe_ingredient }}</label> </p>
+        <p class="article-content"> <label><i><b>Cook Time: </b></i>{{ recipe.recipe_cook_time }} </label></p>
+         <p class="article-content"><label><i><b>Method: </b></i>{{ recipe.recipe_method }}</label></p>
+         <p class="article-content"><label><i><b>Meal Type: </b></i>{{ recipe.recipe_meal_type }}</label></p>
+        <h5>Instructions</h5>
+        <p>{{ recipe.content }}</p>
+      </div>
+      <div class="like-btn" style="margin-top: 40px;margin: 20px;">
+        {% if current_user.already_liked_recipe(recipe) %}
+        <a class="btn btn-secondary btn-md mt-1 mb-1" href="{{ url_for('like_function', recipe_id=recipe.id, action='unlike') }}">Unlike</a>
+        {% else %}
+        <a class="btn btn-secondary btn-md mt-1 mb-1" href="{{ url_for('like_function', recipe_id=recipe.id, action='like') }}">Like</a>
+        {% endif %}
+        {{ recipe.likes.count() }} Likes
+        <br>
+
+      </div>
+
+      <div class="comment-note-btn" style="margin-top: 40px; margin: 20px;">
+        <a class="btn btn-secondary btn-md mt-1 mb-1" href="{{ url_for('note', recipe_name=recipe.recipe_name) }}">Add Notes</a>
+        <a class="btn btn-secondary btn-md mt-1 mb-1" href="{{ url_for('comment_recipe', recipe_id=recipe.id) }}">Add comment</a>
+
+
+      </div>
+      <div class="subscribe-btn">
+        {% if current_user.already_subscribed(recipe.user_id) %}
+        
+        <a class="btn btn-secondary btn-md mt-1 mb-1" href="{{ url_for('subscribe', user_id=recipe.user_id, action='unsubscribe') }}">Unsubscribe</a>
+        {% else %}
+        
+        <a class="btn btn-secondary btn-md mt-1 mb-1" href="{{ url_for('subscribe', user_id=recipe.user_id, action='subscribe') }}">Subscribe</a>
+        {% endif %}
+      </div>
+
+      <div class="author-page-btn">
+        <a class="btn btn-secondary btn-md mt-1 mb-1" href="{{ url_for('author_profile', username=recipe.author.username) }}">Visit Author's Profile</a>
+      </div>
+
+      <div class="comments" style="margin-top: 50px;">
+        <h4 style="margin-left: 15px;">Recipe Comments</h4>
+        {% if recipe.comments %}
+        {% if recipe.comments.count() > 0 %}
+        <p>
+          {% for comment in recipe.comments %}
+          <div class="comment-content" style="margin: 20px;background-color:rgba(214, 172, 172, 0.301);  width: 50%">
+            <p style="color:rgb(240, 190, 190);margin: 10px;"> <label><b> {{ comment.author.username }} : </b></label> {{ comment.body }}</p>
+          </div>
+        {% endfor %}
+        </p>
+        {% endif %}
+        {% endif %}
+      </div>
+<!--  -->
+
+      <div class="notes" style="margin-top: 50px;">
+        <h4 style="margin-left: 15px;">Your Notes</h4>
+        {% for note in notes %}
+        {% if note.author == current_user %}
+        {% if note.recipe_name == recipe_name %}
+
+        <div class="comment-content" style="margin: 20px;background-color:rgba(98, 132, 155, 0.575);  width: 50%">
+          <p style="color:rgb(240, 190, 190);margin: 10px"> <label>{{ note.body }}</label></p>
+        </div>
+
+        {% endif %}    
+        {% endif %}
+        {% endfor %}
+      </div>
+      <div class="Recommendations" style="margin-top: 50px; margin-bottom: 20px; padding-bottom: 10px;"></div>
+      
+        <div style="padding-bottom: 15px;">
+          <h4 style="margin-left: 15px;"> Similar Recipes </h4>
+        </div>
+        <div class="row" style="margin: 10px;">
+        {% if current_user.is_authenticated %}
+        {% for recip in recipe_recommendation %}
+        {% if recip.recipe_name != recipe_name %}
+        {% if recip.recipe_name not in recipe_not_included %}
+        <div class="card">
+                    
+          <h2 class="card-title">{{ recip.recipe_name }}</h2>
+          <p class="card-text">
+            Meal Type: {{ recip.recipe_meal_type }}
+            <br>
+            By: {{ recip.author.username }}
+            <br>
+            <br>
+            <br>
+            <i class="far fa-heart" style="margin-bottom: 10px;"></i> {{ recip.likes.count() }} Likes
+          </p> 
+          <br>
+          <div class="align-self-end">
+            <a class="button" href="{{ url_for('recipe', recipe_id=recip.id) }}">View Recipe</a>
+          </div>
+           
+    
+        </div>          
+        {% endif %} 
+        {% endif %} 
+        {% endfor %}
+        {% endif %}  
+      </div>
+      </div>  
+  
+
+
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel" style="color:rgb(0, 0, 0)">Delete Recipe?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <form action="{{ url_for('delete_recipe', recipe_id=recipe.id)}}" method="POST">
+              <input class="btn btn-danger" type="submit" value="Delete">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

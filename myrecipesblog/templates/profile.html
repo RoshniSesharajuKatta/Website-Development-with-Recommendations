@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MyRecipes</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://kit.fontawesome.com/7e35cfb087.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+      <a class="navbar-brand navbar-custom" style="font-weight: bold; font-size: 30px" href="{{ url_for('home') }}">MyRecipes</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav navbar-custom ml-auto">
+          <li class="nav-item navbar-custom active">
+            <a class="nav-link navbar-custom" href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home <span class="sr-only">(current)</span></a>
+          </li>
+          
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('contact') }}">Contact</a>
+          </li>
+          {% if current_user.is_authenticated %}
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('account') }}">Account</a>
+          </li>
+          {% if current_user.account_type == 'Contributor' %}
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i> {{ current_user.username }}</a>
+          </li>
+          {% endif %}
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('logout') }}">Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('login') }}">Login</a>
+          </li>
+          <li class="nav-item navbar-custom">
+            <a class="nav-link navbar-custom" href="{{ url_for('signup') }}">Sign Up</a>
+          </li>
+          {% endif %}
+        </ul>
+
+      </div>
+    </nav>
+    {% if current_user.is_authenticated %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="nfbutton" href="{{ url_for('newsfeed') }}">Newsfeed</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon">   
+      </span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <form method="POST">
+           <input type="text" autofocus="autofocus" placeholder="Recipe name" name="search_string">
+           <input type="text" autofocus="autofocus" placeholder="Ingredients" name="search_string2">
+           <input type="text" autofocus="autofocus" placeholder="Cooking time" name="search_string3">
+           <input type="text" autofocus="autofocus" placeholder="Method" name="search_string4">
+           <input type="text" autofocus="autofocus" placeholder="Meal type" name="search_string5">
+          
+           <input type="submit" formaction="/search" value="Search">
+          
+          
+          </form>
+          
+          
+        </li>
+      </ul>
+    </div>    
+    </nav>
+    {% endif %}
+
+    <div class="row py-5 px-5">
+      <div class="col-md-11 mx-auto">
+          <!-- Profile widget -->
+          <div class="bg-white shadow rounded overflow-hidden" >
+              <div class="px-4 pt-0 pb-4 cover">
+                  <div class="align-items-end profile-head">
+                    <div class="profile mr-3">
+                      <img src="{{ image_file }}" alt="..." width="130" class="rounded mb-2 profile-image">
+                      <h2><p style="color:blue">{{ current_user.username }}</p></h2>
+                      <p class="text-secondary">{{ current_user.email }}</p>
+                    </div>
+                    
+                    <div class="mb-5 text-white" style="width: 20%;">
+                      <a href="{{ url_for('account') }}" class="btn btn-outline-dark btn-block">Edit profile</a>
+                 
+                    </div>
+                    
+                  </div>
+                  
+                </div>
+          </div>
+          <nav class="navbar navbar-expand-lg navbar-custom">
+            <a class="navbar-brand navbar-custom" style="font-weight: bold; font-size: 20px"> My Recipes</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav navbar-custom ml-auto">
+                <li class="nav-item navbar-custom active">
+                  <a class="nav-link navbar-custom" href="{{ url_for('create_recipe') }}"> Create New Recipe <span class="sr-only">(current)</span></a>
+                </li>
+              </ul>
+
+            </div>
+          </nav>
+
+
+
+
+          <div class="row">
+            {% for recipe in recipes %}
+            {% if recipe.author == current_user %}
+            <div class="card">
+                    
+              <h2 class="card-title">{{ recipe.recipe_name }}</h2>
+              <p class="card-text">
+                Meal Type: {{ recipe.recipe_meal_type }}
+                <br>
+                <br>
+                <br>
+                <i class="far fa-heart" style="margin-bottom: 10px;"></i> {{ recipe.likes.count() }} Likes
+              </p> 
+              <br>
+              <div class="align-self-end">
+                <a class="button" href="{{ url_for('recipe', recipe_id=recipe.id) }}">View Recipe</a>
+              </div>
+               
+        
+            </div>   
+            {% endif %}
+            {% endfor %}    
+          </div>
+
+
+      </div>
+  </div>
+
+ </body>
+</html>
