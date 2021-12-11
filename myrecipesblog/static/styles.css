@@ -1,0 +1,223 @@
+.navbar-custom {
+  background-color: black;
+  color: white;
+  margin-bottom: 5px;
+}
+
+body {
+  background-image: url('/static/images/food4.jpg');
+  background-size: cover;
+  color: white;
+}
+
+.welcome {
+  background-color: white;
+  color: black;
+  margin: 50px;
+  padding-left: 150px;
+  padding-right: 150px;
+}
+
+/* .homecontent {
+  
+  margin: 50px;
+  padding-left: 150px;
+  padding-right: 150px;
+} */
+
+
+.hometitle {
+  text-align: center;
+  font-size: 100px;
+  margin: 50px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.homepara {
+  text-align: center;
+  font-size: 50px;
+  
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Login Page */
+
+.login-page {
+  background-color: white;
+  color: black;
+  margin: 150px;
+  padding: 50px;
+}
+
+/* Signup Page */
+
+.signup-page {
+  background-color: white;
+  color: black;
+  margin: 150px;
+  padding: 50px;
+}
+
+/* update Recipe Page */
+.update-recipe {
+  background-color: white;
+  color: black;
+  margin: 150px;
+  padding: 50px;
+}
+
+.card {
+  width: 18rem;
+  margin: 25px;
+}
+
+.card-title{
+  color: black;
+  text-align: center;
+}
+
+.card-text{
+  color: black;
+  text-align: left;
+  margin: 5px;
+}
+
+.align-self-end {
+  position: absolute;
+  bottom: 0;
+}
+
+.button {
+  background-color: black;
+  color: white;
+}
+
+.nfbutton {
+  background-color: black;
+  color: white;
+  display: inline-block;
+  width: 10%;
+  height: 50%;
+  text-align: center;
+  padding: 15px;
+  /* margin-top: 50px;
+  margin-left: 250px;
+  margin-right: 500px;  */
+  
+}
+
+.cardprof {
+  width: 18rem;
+  margin: 25px;
+  background-color: rgb(0, 0, 0);
+}
+.cardprof-title{
+  color: rgb(199, 199, 199);
+  text-align: center;
+}
+
+.cardprof-text{
+  color: rgba(255, 255, 255, 0.918);
+  text-align: left;
+  margin: 5px;
+}
+
+.account-img {
+  margin: 20px;
+  padding: 20px;
+}
+
+.profile-details {
+  padding-top: 40px;
+}
+
+.picture-button {
+  padding-left: 30px;
+}
+
+.update {
+  padding-bottom: 20px;
+}
+
+.profile-image {
+  padding: 20px;
+}
+
+/* Recipe Page */
+
+.recipe-name {
+  text-align: center;
+  font-size: 50px;
+  padding-bottom: 30px;
+}
+
+/* Recipe Content */
+
+.recipe-content {
+  font-size: 20px;
+}
+
+/* Tried Button */
+.tried-button {
+  background-color: white;
+  color: black;
+  padding: 10px;
+  margin: 25px;
+  font-size: 20px;
+  border-radius: 12px;
+}
+
+.tried-button:hover {
+  background-color: gray;
+  color: white;
+}
+
+/* Update And Delete Buttons */
+
+.update-delete-btn {
+  padding-left: 20px;
+  font-size: 30px;
+}
+
+/* Subscribe Button */
+
+.subscribe-btn {
+  padding-left: 20px;
+  padding-bottom: 10px;
+  
+}
+
+/* Author Page Button */
+.author-page-btn {
+  padding-left: 20px;
+  padding-bottom: 10px;
+}
+
+/* Contact Page */
+
+.contact {
+  background-color: white;
+  color: black;
+  margin: 50px;
+  padding-left: 150px;
+  padding-right: 150px;
+}
+
+.contact-title {
+  text-align: left;
+  font-size: 50px;
+  
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.contact-para {
+  text-align: left;
+  font-size: 25px;
+  
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
